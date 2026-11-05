@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![SmartPay Hero Banner](https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=1200&auto=format&fit=crop)
+![SmartPay — Next-Generation Fintech Platform](./smartpay-banner.png)
 
 ### **Pay Smart. Live Secure.**
 
@@ -15,7 +15,7 @@
 [![JUnit 5](https://img.shields.io/badge/JUnit_5-21%2F21_Tests_Passing-success.svg)](https://junit.org/junit5/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-*An enterprise-grade, full-stack payment ecosystem engineered with Spring Boot 3, Java 21, React, and MySQL — featuring high-concurrency wallet protection, NPCI UPI simulator, AI Scam Shield, and Cashly-inspired mobile design.*
+*A full-stack digital payments platform built with Spring Boot, Java 21, React, and MySQL. SmartPay combines wallet management, UPI payment simulation, secure transaction processing, merchant tools, and intelligent fraud detection in a unified, responsive interface.*
 
 </div>
 
@@ -40,7 +40,11 @@
 
 ## 🌟 Executive Overview
 
-**SmartPay** is a production-architected fintech web and mobile platform modeled after modern digital banking applications and the Indian Unified Payments Interface (UPI) standard. Designed for zero-downtime reliability and microsecond consistency, SmartPay bridges consumer payment experiences (P2P transfers, QR scan-and-pay, bill recharges, recurring autopay) with merchant tooling (smart voice soundbox, ledger khata, dynamic QR generation) and administrative governance.
+**SmartPay** is a modern digital payment platform built with Spring Boot, Java 21, React, and MySQL. It brings together essential financial services, including peer-to-peer transfers, QR-based payments, bill recharges, recurring payments, merchant management, and real-time transaction tracking.
+
+Designed with a modular architecture and responsive interface, SmartPay focuses on secure transaction processing, reliable payment workflows, and seamless user experiences across desktop, tablet, and mobile devices.
+
+The platform also introduces an AI-assisted Scam Shield concept to identify potentially suspicious payment activities, detect common fraud indicators, and provide contextual security alerts.
 
 ### Core Architecture Pillars:
 - **Zero Double-Spend Concurrency**: High-frequency wallet debits guarded by pessimistic database locking (`@Lock(LockModeType.PESSIMISTIC_WRITE)`).
@@ -52,81 +56,109 @@
 
 ## 🎨 Visual Identity & Design System
 
-SmartPay's user interface is crafted to replicate high-end fintech aesthetics:
+SmartPay uses a consistent design system inspired by modern digital banking interfaces, combining visual clarity, accessibility, and responsive layouts across desktop, tablet, and mobile devices.
 
-| Token | Hex Value | Application |
+### Design Tokens
+
+| Design Token | Hex Value | Usage |
 |---|---|---|
-| **Primary Violet** | `#5C1DBA` | Main headers, action bars, brand accents |
-| **Vibrant Purple** | `#7426E2` | Gradient balance cards, active pills, icons |
-| **Electric Purple** | `#8C3CF7` | Floating QR action button, highlights |
-| **Deep Surface** | `#2C0B5E` | Bottom curved contour container |
-| **Soft Background** | `#F8F9FE` | Ambient screen backdrop |
-| **Border Highlight** | `rgba(255,255,255,0.18)` | Glassmorphic card borders |
+| **Primary Violet** | `#5C1DBA` | Primary actions, navigation highlights, and brand identity |
+| **Vibrant Purple** | `#7426E2` | Gradient surfaces, active states, and interactive elements |
+| **Electric Purple** | `#8C3CF7` | Floating action buttons, icons, and visual accents |
+| **Deep Surface** | `#2C0B5E` | Dark surfaces and bottom navigation containers |
+| **Soft Background** | `#F8F9FE` | Main application background and content surfaces |
+| **Border Highlight** | `rgba(255,255,255,0.18)` | Subtle borders and translucent card elements |
+
+### Responsive Design
+
+- **Mobile:** 320px–767px
+- **Tablet:** 768px–1365px
+- **Desktop:** 1366px and above
+
+The interface prioritizes consistent spacing, readable typography, accessible contrast, and intuitive navigation across screen sizes.
 
 ---
+
 
 ## 🏛 System Architecture
 
+SmartPay follows a modular client-server architecture with a React-based frontend, a Spring Boot backend, secure REST APIs, and a MySQL persistence layer.
+
 ```mermaid
 flowchart TD
-    Client["React 18 + Vite SPA Client\n(Mobile 320-767px | Tablet 768-1365px | Desktop 1366px+)"]
-    Gateway["Spring Security 6 Gateway\n(JWT HS256 Token Filter & CORS)"]
-    
-    subgraph CoreBackend["Spring Boot 3.3.5 Application Layer"]
-        AuthSvc["Auth & Onboarding Service\n(Google OAuth, OTP Engine)"]
-        PaymentEng["Payment Engine\n(Pessimistic Locking & Idempotency)"]
-        FraudShield["AI Fraud & Scam Shield\n(Heuristic & NLP Analysis)"]
-        BankSim["NPCI Bank Switch Simulator\n(SBI, HDFC, ICICI, Axis)"]
-        KhataSvc["Family Khata & Ledger Engine"]
-        MerchantSvc["Merchant Soundbox & Dues Engine"]
-    end
-    
-    subgraph Persistence["MySQL 8 / MariaDB Database (28 Tables)"]
-        DB_Users[("users & roles")]
-        DB_Wallets[("wallets & ledger_entries")]
-        DB_Txns[("payments & bank_accounts")]
-        DB_Khata[("khata_groups & expenses")]
-        DB_Audit[("audit_logs & fraud_alerts")]
+    User["User"]
+    Client["React 18 + Vite SPA<br/>Responsive Web Interface<br/>Mobile | Tablet | Desktop"]
+    Gateway["Spring Security 6<br/>JWT Authentication & CORS<br/>REST API Gateway"]
+
+    subgraph Backend["Spring Boot 3.3.5 Application Layer"]
+        Auth["Authentication & Onboarding<br/>Google OAuth | OTP"]
+        Payment["Payment Processing Engine<br/>Idempotency | Database Locking"]
+        Fraud["AI Fraud & Scam Shield<br/>Heuristic & NLP Analysis"]
+        Bank["NPCI Bank Switch Simulator<br/>SBI | HDFC | ICICI | Axis"]
+        Khata["Family Khata & Ledger Engine"]
+        Merchant["Merchant & Dues Management"]
     end
 
-    Client -->|Axios REST / JSON| Gateway
-    Gateway --> AuthSvc
-    Gateway --> PaymentEng
-    Gateway --> BankSim
-    Gateway --> KhataSvc
-    Gateway --> MerchantSvc
-    
-    PaymentEng --> FraudShield
-    PaymentEng -->|PESSIMISTIC_WRITE Lock| DB_Wallets
-    PaymentEng --> DB_Txns
-    PaymentEng --> DB_Audit
-    AuthSvc --> DB_Users
-    KhataSvc --> DB_Khata
+    subgraph Database["MySQL 8 / MariaDB Persistence Layer"]
+        Users[("Users & Roles")]
+        Wallets[("Wallets & Ledger Entries")]
+        Transactions[("Payments & Bank Accounts")]
+        KhataDB[("Khata Groups & Expenses")]
+        Audit[("Audit Logs & Fraud Alerts")]
+    end
+
+    User --> Client
+    Client <-->|"REST API / JSON"| Gateway
+
+    Gateway --> Auth
+    Gateway --> Payment
+    Gateway --> Khata
+    Gateway --> Merchant
+
+    Auth --> Users
+
+    Payment --> Fraud
+    Payment --> Bank
+    Payment -->|"Pessimistic Write Lock"| Wallets
+    Payment --> Transactions
+    Payment --> Audit
+
+    Fraud --> Audit
+    Khata --> KhataDB
 ```
 
----
 
 ## ⚡ Key Features & Capabilities
 
+
+SmartPay brings together consumer payments, banking workflows, intelligent security, and merchant utilities in a unified digital payment experience.
+
 ### 1. Consumer Payment Suite
-- **P2P Instant Transfers**: Transfer funds via Phone Number, UPI ID (`username@smartpay`), or Account + IFSC.
-- **Dynamic QR Scanner & Code Generator**: Scan BharatQR/UPI QR codes or generate custom amount-embedded QR codes.
-- **UPI Lite & Offline Tap-to-Pay**: Low-value instant balance stored locally for sub-second offline checkouts up to ₹500 without PIN.
-- **Autopay & E-Mandates**: Set up recurring subscriptions (Netflix, Spotify, electricity) with automated debit scheduling.
 
-### 2. Banking & Onboarding Engine
-- **Google One-Tap / OAuth 2.0 Integration**: Simulated seamless sign-in with instant profile creation.
-- **Multi-Factor Mobile OTP**: 6-digit cryptographic verification with rate-limiting and device fingerprinting.
-- **NPCI Bank Account Discovery**: Automatic simulation of accounts linked to phone numbers across State Bank of India, HDFC Bank, ICICI Bank, Axis Bank, and Punjab National Bank.
+- **P2P Money Transfers:** Initiate transfers using mobile numbers, UPI IDs, or bank account details with IFSC codes.
+- **QR Code Payments:** Scan supported BharatQR/UPI QR codes and generate payment QR codes with predefined amounts.
+- **UPI Lite Concept:** Supports a simulated low-value payment workflow using a locally maintained balance.
+- **Recurring Payments & Autopay:** Configure recurring payment schedules for subscriptions, utility bills, and other regular expenses.
 
-### 3. AI Fraud & Scam Shield
-- Real-time transaction memo scanner flags suspicious triggers (`AnyDesk`, `TeamViewer`, `APK install`, `Urgent lottery`, `Gift Card`).
-- High-risk transactions (`riskScore >= 80`) are immediately blocked with HTTP 403 Forbidden and logged to the security audit trail.
+### 2. Banking & User Onboarding
 
-### 4. Family Khata & Merchant Soundbox
-- **Family Khata**: Collaborative group ledger for splitting room rent, groceries, and travel expenses with settlement graphs.
-- **Merchant Soundbox**: Real-time simulated audio speaker announcing payment receipts across multiple Indian regional languages.
-- **Customer Dues Ledger**: Record credit (*Udhar*), send automated SMS/WhatsApp reminders, and mark settled.
+- **Google OAuth Integration:** Google-based authentication and user onboarding.
+- **Mobile OTP Verification:** Six-digit OTP-based verification with rate-limiting and device-level security checks.
+- **Bank Account Discovery Simulator:** Demonstrates account discovery workflows across supported Indian banking institutions, including SBI, HDFC, ICICI, Axis Bank, and Punjab National Bank.
+
+### 3. AI Fraud Detection & Scam Shield
+
+- **Suspicious Activity Detection:** Analyses transaction descriptions and payment-related text for potential scam indicators.
+- **Fraud Risk Assessment:** Evaluates suspicious payment patterns using heuristic rules and risk scoring.
+- **Security Alerts:** Flags potentially dangerous activities, including remote-access applications, suspicious installation requests, urgent payment demands, and fraudulent payment messages.
+- **Transaction Protection:** Demonstrates configurable risk-based transaction blocking and security audit logging.
+
+### 4. Family Khata & Merchant Management
+
+- **Family Khata:** Collaborative expense tracking for shared household expenses, groceries, rent, and travel.
+- **Expense Settlement:** Maintains shared contribution records and calculates outstanding balances between group members.
+- **Merchant Soundbox Simulator:** Demonstrates payment confirmation announcements with support for multiple Indian regional languages.
+- **Customer Dues Ledger:** Maintains customer credit records (*Udhar*), payment history, settlement status, and reminder workflows.
 
 ---
 
@@ -135,31 +167,61 @@ flowchart TD
 | Layer | Technologies |
 |---|---|
 | **Frontend Framework** | React 18.3, Vite 8.3, React Router DOM 6 |
-| **Styling & Icons** | Tailwind CSS 3.4, Lucide React, Glassmorphism CSS |
+| **UI & Styling** | Tailwind CSS 3.4, Lucide React, Custom CSS |
 | **Backend Framework** | Java 21 LTS, Spring Boot 3.3.5 |
-| **Security & Auth** | Spring Security 6, JJWT (io.jsonwebtoken 0.12.6), BCrypt |
-| **ORM & Data Access** | Spring Data JPA, Hibernate 6, MySQL Connector/J |
-| **Database** | MySQL 8.0 / MariaDB 10.4 (XAMPP compatible) |
-| **Testing** | JUnit 5, Spring Boot Test, Surefire, ByteBuddy |
-| **API Docs & Monitoring**| SpringDoc OpenAPI / Swagger 3, Actuator |
+| **API & Communication** | REST APIs, JSON, Axios |
+| **Authentication & Security** | Spring Security 6, JWT (jjwt), BCrypt |
+| **ORM & Persistence** | Spring Data JPA, Hibernate 6 |
+| **Database** | MySQL 8.0 / MariaDB 10.4 |
+| **Testing** | JUnit 5, Spring Boot Test, Mockito |
+| **API Documentation** | SpringDoc OpenAPI, Swagger UI |
+| **Build & Dependency Management** | Apache Maven |
+| **Development Environment** | IntelliJ IDEA, VS Code, XAMPP |
+
 
 ---
 
 ## 📋 Prerequisites & System Requirements
 
-Ensure the following tools are installed before running SmartPay:
+Before setting up SmartPay, ensure that the following software and development tools are installed.
 
-1. **Java Development Kit (JDK)**: Version 21 LTS or newer.
-   ```bash
-   java -version
-   ```
-2. **Node.js**: Version 18.x or 20.x LTS.
-   ```bash
-   node -v
-   npm -v
-   ```
-3. **MySQL Server / XAMPP**: MySQL 8.0+ or MariaDB running on port `3306`.
-4. **Git**: Version 2.40+.
+### Required Software
+
+| Software | Minimum Version | Purpose |
+|---|---|---|
+| **Java JDK** | 21 LTS | Backend application runtime |
+| **Node.js** | 18.x or later | Frontend development environment |
+| **npm** | 9.x or later | Frontend dependency management |
+| **MySQL Server** | 8.0+ | Relational database |
+| **Apache Maven** | 3.8+ | Backend build and dependency management |
+| **Git** | 2.40+ | Version control |
+
+### Verify Installation
+
+Run the following commands in your terminal:
+
+```bash
+java -version
+node -v
+npm -v
+mysql --version
+mvn -version
+git --version
+```
+
+### Recommended Development Environment
+
+- **IDE:** IntelliJ IDEA or Visual Studio Code
+- **Database Management:** phpMyAdmin or MySQL Workbench
+- **API Testing:** Postman
+- **Operating System:** Windows 10/11, Linux, or macOS
+
+### Hardware Requirements
+
+- **RAM:** 8 GB minimum, 16 GB recommended
+- **Storage:** At least 5 GB of available space
+- **Processor:** Modern dual-core processor or better
+- **Internet:** Required for downloading dependencies and accessing external services.
 
 ---
 
