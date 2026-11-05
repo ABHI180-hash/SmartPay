@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background: #F4F1FD;
+    color: #1E1B4B;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Custom subtle lavender-purple scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F4F1FD;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #DDD6FE;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #8B5CF6;
+  }
+}
+
+@keyframes scanAnimation {
+  0% {
+    top: 5%;
+    opacity: 0.8;
+  }
+  50% {
+    top: 90%;
+    opacity: 1;
+  }
+  100% {
+    top: 5%;
+    opacity: 0.8;
+  }
+}
+
+.animate-scan-line {
+  animation: scanAnimation 2.4s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(124, 58, 237, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(124, 58, 237, 0.7);
+  }
+}
+
+.glow-purple-pulse {
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* Glassmorphism helpers with Cashly purple / lavender styling */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(230, 224, 250, 0.8);
+}
+
+.glass-purple {
+  background: rgba(109, 40, 217, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(192, 132, 252, 0.25);
+}
+
+.glass-card {
+  background: #FFFFFF;
+  border: 1px solid #ECE7FE;
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.05);
+}

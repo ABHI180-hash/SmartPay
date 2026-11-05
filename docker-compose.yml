@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. MySQL 8 Database Service
+  # ----------------------------------------------------------------------------
+  smartpay-db:
+    image: mysql:8.0
+    container_name: smartpay-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: smartpay_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./Database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./Database/sample-data.sql:/docker-entrypoint-initdb.d/02-data.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - smartpay-network
+
+  # ----------------------------------------------------------------------------
+  # 2. Spring Boot 3.3.5 Backend Service
+  # ----------------------------------------------------------------------------
+  smartpay-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smartpay-api
+    restart: always
+    depends_on:
+      smartpay-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://smartpay-db:3306/smartpay_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - smartpay-network
+
+  # ----------------------------------------------------------------------------
+  # 3. React Vite SPA Frontend Service (Production Nginx)
+  # ----------------------------------------------------------------------------
+  smartpay-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: smartpay-web
+    restart: always
+    depends_on:
+      - smartpay-backend
+    ports:
+      - "80:80"
+    networks:
+      - smartpay-network
+
+volumes:
+  mysql-data:
+
+networks:
+  smartpay-network:
+    driver: bridge
